@@ -91,3 +91,5 @@ configs/
 release/
 
 .idea/
+
+*.log
