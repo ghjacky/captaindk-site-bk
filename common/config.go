@@ -12,6 +12,7 @@ type SConfig struct {
 	Listen       string   // 服务监听地址，例：127.0.0.1:8080
 	LogFile      *os.File // 日志文件
 	SMysqlConfig          // mysql配置
+	FileStore    string   // 文件存储位置
 }
 
 // 全局配置对象定义
@@ -23,6 +24,7 @@ var (
 const (
 	DefaultListen        = "127.0.0.1:8080"
 	DefaultMysqlBind     = "127.0.0.1:3306"
+	DefaultFileStore     = "/tmp"
 	DefaultMysqlDB       = "cdks"
 	DefaultMysqlUser     = "root"
 	DefaultMysqlPassword = "roothjack"
@@ -50,13 +52,14 @@ func validateOrSetDefaultConfiguration(config *SConfig) {
 		config.LogFile = DefaultLog
 	} else {
 		var err error
-		if config.LogFile, err = os.OpenFile(viper.GetString("main.log"), os.O_CREATE|os.O_RDWR, 0644); err != nil {
+		if config.LogFile, err = os.OpenFile(viper.GetString("main.log"), os.O_CREATE|os.O_RDWR|os.O_APPEND, 0644); err != nil {
 			Log.Warnf("日志文件打开失败：%s，使用默认值：%s", err.Error(), DefaultLog.Name())
 			config.LogFile = DefaultLog
 		}
 	}
 	// 服务监听地址
 	config.Listen = valideNetAddr("main.listen", DefaultListen)
+	config.FileStore = valideString("main.file_store", DefaultFileStore)
 	// 数据库
 	config.SMysqlConfig.Bind = valideNetAddr("mysql.bind", DefaultMysqlBind)
 	config.SMysqlConfig.Database = valideString("mysql.database", DefaultMysqlDB)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"captaindk.site/common"
+	"captaindk.site/model"
 	"captaindk.site/router"
 	"flag"
 	"fmt"
@@ -32,6 +33,7 @@ func main() {
 	}()
 	// 初始化数据库
 	common.InitMysql()
+	common.Mysql.AutoMigrate(&model.SArticle{}, &model.SCategory{}, &model.STag{}, &model.SFile{})
 	defer func() {
 		_ = common.Mysql.Close()
 	}()

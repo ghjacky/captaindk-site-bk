@@ -25,7 +25,7 @@ func InitMysql() {
 	if err != nil {
 		Log.Fatalf("无法连接到mysql服务，程序退出! %s", err.Error())
 	} else {
-		Mysql = Mysql.LogMode(false)
+		Mysql = Mysql.LogMode(true)
 	}
 	Log.Infoln("mysql连接初始化完成")
 }
